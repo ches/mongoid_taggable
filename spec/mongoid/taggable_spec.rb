@@ -43,6 +43,13 @@ class Template
 end
 
 describe Mongoid::Taggable do
+
+  describe "default tags value" do
+    it "is an empty array" do
+      MyModel.new.tags.should == []
+    end
+  end
+  
   context "saving tags" do
     let(:model) { MyModel.new }
 

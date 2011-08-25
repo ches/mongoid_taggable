@@ -59,7 +59,7 @@ module Mongoid::Taggable
       self.tags_separator  = options[:separator]
       self.tag_aggregation = options[:aggregation]
 
-      field tags_field, :type => Array
+      field tags_field, :type => Array, :default => []
       index tags_field
 
       define_tag_field_accessors(tags_field)
