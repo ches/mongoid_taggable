@@ -22,10 +22,10 @@ module Mongoid::Taggable
 
     delegate :convert_string_tags_to_array, :aggregate_tags!, :to => 'self.class'
 
-    set_callback :create,  :after,  :aggregate_tags!
-    set_callback :destroy, :after,  :aggregate_tags!
+    set_callback :create,  :after,  :aggregate_tags!, :if => proc { self.class.aggregate_tags? }
+    set_callback :destroy, :after,  :aggregate_tags!, :if => proc { self.class.aggregate_tags? }
     set_callback :save,    :before, :dedup_tags!,     :if => proc { changes.include?(tags_field.to_s) }
-    set_callback :save,    :after,  :aggregate_tags!, :if => proc { changes.include?(tags_field.to_s) }
+    set_callback :save,    :after,  :aggregate_tags!, :if => proc { changes.include?(tags_field.to_s) and self.class.aggregate_tags? }
   end
 
   module ClassMethods
@@ -90,8 +90,6 @@ module Mongoid::Taggable
     # Execute map/reduce operation to aggregate tag counts for document
     # class
     def aggregate_tags!
-      return unless aggregate_tags?
-
       map = "function() {
         if (!this.#{tags_field}) {
           return;

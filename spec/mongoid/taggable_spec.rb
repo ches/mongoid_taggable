@@ -136,6 +136,12 @@ describe Mongoid::Taggable do
       MyModel.tags.should == []
     end
 
+    it "can be forced" do
+      MyModel.create!(:tags => "sample,tags")
+      MyModel.aggregate_tags!
+      MyModel.tags.should == %w[sample tags]
+    end
+
     context "when enabled" do
       before :all do
         MyModel.tag_aggregation = true
