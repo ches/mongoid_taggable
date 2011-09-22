@@ -24,8 +24,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rdoc", ["~> 3.5.0"])
   s.add_development_dependency('rspec', ['~> 2.6.0'])
 
-  s.extra_rdoc_files = %w[LICENSE README.textile]
-  s.files = Dir.glob('lib/**/*') + %w[LICENSE README.textile Rakefile]
+  s.extra_rdoc_files = %w[LICENSE README.md]
+  s.files = Dir.glob('lib/**/*') + %w[LICENSE README.md Rakefile]
   s.require_paths = %w[lib]
 end
 
