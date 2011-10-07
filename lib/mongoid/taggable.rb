@@ -16,8 +16,8 @@ module Mongoid::Taggable
   extend ActiveSupport::Concern
 
   included do
-    class_inheritable_reader :tags_field
-    class_inheritable_accessor :tags_separator, :tag_aggregation,
+    class_attribute :tags_field
+    class_attribute :tags_separator, :tag_aggregation,
       :instance_writer => false
 
     delegate :convert_string_tags_to_array, :aggregate_tags!, :aggregate_tags?,
@@ -53,7 +53,7 @@ module Mongoid::Taggable
     def taggable(*args)
       options = args.extract_options!
 
-      write_inheritable_attribute(:tags_field, args.blank? ? :tags : args.shift)
+      self.tags_field = args.blank? ? :tags : args.shift
       self.tags_separator  = options.delete(:separator) { ',' }
       self.tag_aggregation = options.delete(:aggregation) { false }
 
