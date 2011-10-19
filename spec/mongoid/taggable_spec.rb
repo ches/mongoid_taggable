@@ -96,7 +96,7 @@ describe Mongoid::Taggable do
 
   context "with unrecognized options to taggable" do
     it "passes them to the Mongoid field definition" do
-      Article.defaults.should eq 'keywords' => []
+      Article.defaults.should eq ['keywords']
     end
   end
 
