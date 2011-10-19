@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("bson_ext", ["~> 1.3"])
   s.add_development_dependency('database_cleaner', ['~> 0.6.0'])
   s.add_development_dependency("rdoc", ["~> 3.5.0"])
-  s.add_development_dependency('rspec', ['~> 2.1.0'])
+  s.add_development_dependency('rspec', ['~> 2.6.0'])
 
   s.extra_rdoc_files = %w[LICENSE README.md]
   s.files = Dir.glob('lib/**/*') + %w[LICENSE README.md Rakefile]

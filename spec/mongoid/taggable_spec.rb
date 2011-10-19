@@ -26,7 +26,7 @@ class Article
   include Mongoid::Document
   include Mongoid::Taggable
 
-  taggable :keywords
+  taggable :keywords, :default => []
 end
 
 class Editorial < Article
@@ -91,6 +91,12 @@ describe Mongoid::Taggable do
     it "skips de-deduplication on save if tags are unchanged" do
       model.should_not_receive(:dedup_tags!)
       model.update_attribute(:attr, 'changed')
+    end
+  end
+
+  context "with unrecognized options to taggable" do
+    it "passes them to the Mongoid field definition" do
+      Article.defaults.should eq ['keywords']
     end
   end
 
