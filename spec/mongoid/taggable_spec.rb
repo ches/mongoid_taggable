@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2010 Wilker Lúcio <wilkerlucio@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +40,16 @@ class Template
   include Mongoid::Taggable
   include Mongoid::Timestamps
 
-  taggable :aggregation => true
+  taggable :aggregation => true 
+end
+
+class Post
+  include Mongoid::Document
+  include Mongoid::Taggable
+
+  field :published, :type => Boolean
+
+  taggable :aggregation_options => {}
 end
 
 describe Mongoid::Taggable do
@@ -205,6 +215,26 @@ describe Mongoid::Taggable do
         Article.create!(:keywords => "more, tags")
         Article.keywords.should == ["more", "some", "tags"]
         Article.keywords_with_weight.should include(['tags', 2])
+      end
+    end
+
+    context "with aggregation options" do
+      let!(:posts) do 
+        [
+          Post.create!(:tags => "programming",         :published => false),
+          Post.create!(:tags => "sports,leisure",      :published => true),
+          Post.create!(:tags => "programming, sports", :published => true)
+        ]
+      end
+
+      it "counts aggregates with the specified options" do
+        Post.tag_aggregation_options = { :query => { :published => true } }
+        Post.aggregate_tags!
+        Post.tags_with_weight.should == [
+          ['leisure', 1],
+          ['programming', 1],
+          ['sports', 2],
+        ]
       end
     end
   end
