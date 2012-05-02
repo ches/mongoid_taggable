@@ -67,6 +67,11 @@ describe Mongoid::Taggable do
         model.tags.should == ["now", "with", "some spaces", "in places"]
       end
 
+      it "replaces inner white space with one space" do
+        model.tags = "now ,  with, some \t spaces  , in\tplaces "
+        model.tags.should == ["now", "with", "some spaces", "in places"]
+      end
+
       it "rejects blank tags" do
         model.tags = "repetitive,, commas, shouldn't cause,,, empty tags"
         model.tags.should == ["repetitive", "commas", "shouldn't cause", "empty tags"]
@@ -106,7 +111,7 @@ describe Mongoid::Taggable do
 
   context "with unrecognized options to taggable" do
     it "passes them to the Mongoid field definition" do
-      Article.defaults.should eq 'keywords' => []
+      Article.defaults.should eq ['keywords']
     end
   end
 
