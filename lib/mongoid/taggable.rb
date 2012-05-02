@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2010 Wilker Lúcio <wilkerlucio@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +18,7 @@ module Mongoid::Taggable
 
   included do
     class_attribute :tags_field, :tags_separator, :tag_aggregation,
-      :instance_writer => false
+      :tag_aggregation_options, :instance_writer => false
 
     delegate :convert_string_tags_to_array, :aggregate_tags!, :aggregate_tags?,
       :to => 'self.class'
@@ -38,7 +39,8 @@ module Mongoid::Taggable
     #   class Article
     #     include Mongoid::Document
     #     include Mongoid::Taggable
-    #     taggable :keywords, :separator => ' ', :aggregation => true
+    #     taggable :keywords, :separator => ' ', :aggregation => true,
+    #       :aggregation_options => {}
     #   end
     #
     # @param [ Symbol ] field The name of the field for tags.
@@ -49,12 +51,15 @@ module Mongoid::Taggable
     # @option options [ true, false ] :aggregation Whether or not to
     #   aggregate counts of tags within the document collection using
     #   map/reduce; defaults to false
+    # @option options [ Hash ] :aggregation_options Options for the
+    #   map/reduce ruby-driver method; defaults to {}
     def taggable(*args)
       options = args.extract_options!
 
       self.tags_field = args.blank? ? :tags : args.shift
       self.tags_separator  = options.delete(:separator) { ',' }
       self.tag_aggregation = options.delete(:aggregation) { false }
+      self.tag_aggregation_options = options.delete(:aggregation_options) { {} }
 
       field tags_field, options.merge(:type => Array)
       index tags_field
@@ -110,7 +115,9 @@ module Mongoid::Taggable
         return count;
       }"
 
-      collection.master.map_reduce(map, reduce, :out => tags_aggregation_collection)
+      map_reduce_options = { :out => tags_aggregation_collection }.
+        merge(tag_aggregation_options)
+      collection.master.map_reduce(map, reduce, map_reduce_options)
     end
 
   private

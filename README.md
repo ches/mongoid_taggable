@@ -1,7 +1,8 @@
 Mongoid Taggable
 ================
 
-Mongoid Taggable provides some helpers to create taggable documents.
+Mongoid Taggable provides some helpers to create taggable documents. Changes on
+this fork are noted in the `CHANGELOG` file.
 
 Installation
 ------------
@@ -97,6 +98,23 @@ Post.tags_with_weight # will retrieve:
 ```
 
 You may also trigger aggregation on-demand rather than setting the automatic option, to run it from a background task for instance, by calling `Post.aggregate_tags!`.
+
+If you need to modify the criteria used for the aggregation you may do so as an option to 'taggable':
+
+```ruby
+class Post
+  include Mongoid::Document
+  include Mongoid::Taggable
+  
+  field :title
+  field :content
+  field :published, :type => Boolean
+  
+  taggable :aggregation_options => { :query => { :published => true } }
+end
+```
+
+A full list of available options can be found at [the ruby driver API](http://api.mongodb.org/ruby/current/Mongo/Collection.html#map_reduce-instance_method) (consult the appropriate version).
 
 Changing default separator
 --------------------------
