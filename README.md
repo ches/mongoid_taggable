@@ -13,11 +13,8 @@ You can simply install from rubygems:
 
 or in `Gemfile`:
 
-    gem 'mongoid_taggable'
+    gem 'mongoid_taggable', git: 'https://github.com/ches/mongoid_taggable.git'
 
-or as a Rails Plugin:
-
-    rails plugin install git://github.com/wilkerlucio/mongoid_taggable.git
 
 Basic Usage
 -----------
