@@ -50,7 +50,7 @@ Then in your form, for example:
   </p>
   <p>
     <%= f.label :tags %><br />
-    <%= text_field_tag 'post[tags]', (@post.tags.join(', ') if @post.tags) %>
+    <%= f.text_field :tags %>
   </p>
   <p>
     <button type="submit">Send</button>
@@ -58,7 +58,7 @@ Then in your form, for example:
 <% end %>
 ```
 
-You can of course use helpers or a `FormBuilder` extension to express this in a prettier way. If you're using SimpleForm for example, a custom input can be found in [this Gist](https://gist.github.com/1172956), usable as `f.input :tags` within `simple_form_for` blocks. The text field should receive a list of tags separated by comma (below in this document you will see how to change the separator).
+The text field should receive a list of tags separated by comma (below in this document you will see how to change the separator).
 
 Your document will have a custom `tags=` setter which can accept either an ordinary Array or this separator-delineated String.
 

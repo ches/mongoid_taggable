@@ -117,6 +117,11 @@ describe Mongoid::Taggable do
       article.keywords = "some,new,tag"
       article.keywords.should == %w[some new tag]
     end
+
+    it "#keywords_before_type_cast" do
+      article.keywords = "some,new,tag"
+      article.keywords_before_type_cast.should eq "some, new, tag"
+    end
   end
 
   context "changing separator" do
@@ -239,6 +244,12 @@ describe Mongoid::Taggable do
     end
   end
 
+  context "#tags_before_type_cast" do
+    subject { MyModel.new(:tags => %w[some new tag]) }
+
+    its(:tags_before_type_cast) { should eq "some, new, tag" }
+  end
+
   context "#self.tagged_with" do
     let!(:models) do
       [
@@ -286,6 +297,11 @@ describe Mongoid::Taggable do
       Editorial.create!(:keywords => 'satire politics')
       Article.keywords_with_weight.should include(['satire', 3])
       Editorial.keywords_with_weight.should include(['satire', 3])
+    end
+
+    it "#keywords_before_type_cast" do
+      editorial.keywords = %w[some new tag]
+      editorial.keywords_before_type_cast.should eq "some  new  tag"
     end
   end
 

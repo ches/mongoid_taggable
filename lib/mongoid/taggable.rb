@@ -142,6 +142,12 @@ module Mongoid::Taggable
       end
       alias_method_chain "#{name}=", :taggable
 
+      # Define value_before_type_cast method to format array in input field as comma separated list
+      # @see ActionView::Helpers::InstanceTag::value_before_type_cast
+      define_method "#{name}_before_type_cast" do
+        self.send(name).join("#{tags_separator} ") if self.send(name)
+      end
+
       # Dynamically named class methods, for aggregation
       (class << self; self; end).instance_eval do
         # get an array with all defined tags for this model, this list returns
