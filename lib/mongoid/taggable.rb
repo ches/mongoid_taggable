@@ -166,15 +166,13 @@ module Mongoid::Taggable
     end
   end
 
-  module InstanceMethods
-    # De-duplicate tags, case-insensitively, but preserve case given first
-    def dedup_tags!
-      tags = read_attribute(tags_field)
-      tags = tags.reduce([]) do |uniques, tag|
-        uniques << tag unless uniques.map(&:downcase).include?(tag.downcase)
-        uniques
-      end
-      write_attribute(tags_field, tags)
+  # De-duplicate tags, case-insensitively, but preserve case given first
+  def dedup_tags!
+    tags = read_attribute(tags_field)
+    tags = tags.reduce([]) do |uniques, tag|
+      uniques << tag unless uniques.map(&:downcase).include?(tag.downcase)
+      uniques
     end
+    write_attribute(tags_field, tags)
   end
 end
